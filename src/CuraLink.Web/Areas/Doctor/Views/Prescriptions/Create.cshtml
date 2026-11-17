@@ -1,0 +1,82 @@
+@model PrescriptionCreateViewModel
+@{
+    ViewData["Title"] = "New prescription";
+}
+
+<h1 class="h3 mb-4">New prescription</h1>
+
+<div class="card card-shadow">
+    <div class="card-body">
+        <form asp-area="Doctor" asp-controller="Prescriptions" asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Input.ConsultationId" class="form-label">Consultation</label>
+                    <select asp-for="Input.ConsultationId" class="form-select" asp-items="@(new SelectList(Model.Consultations, "Id", "PatientName"))">
+                        <option value="">Select consultation</option>
+                    </select>
+                    <span asp-validation-for="Input.ConsultationId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.GeneralInstructions" class="form-label"></label>
+                    <input asp-for="Input.GeneralInstructions" class="form-control" />
+                    <span asp-validation-for="Input.GeneralInstructions" class="text-danger"></span>
+                </div>
+            </div>
+
+            <h2 class="h6 mt-4">Medicines</h2>
+            <span asp-validation-for="Input.Items" class="text-danger"></span>
+            @for (var i = 0; i < Model.Input.Items.Count; i++)
+            {
+                <div class="border rounded p-3 mb-3">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Input.Items[i].MedicineName" class="form-label"></label>
+                            <input asp-for="Input.Items[i].MedicineName" class="form-control" />
+                            <span asp-validation-for="Input.Items[i].MedicineName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.Items[i].Strength" class="form-label"></label>
+                            <input asp-for="Input.Items[i].Strength" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.Items[i].DosageInstructions" class="form-label"></label>
+                            <input asp-for="Input.Items[i].DosageInstructions" class="form-control" />
+                            <span asp-validation-for="Input.Items[i].DosageInstructions" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Input.Items[i].Frequency" class="form-label"></label>
+                            <input asp-for="Input.Items[i].Frequency" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Input.Items[i].Duration" class="form-label"></label>
+                            <input asp-for="Input.Items[i].Duration" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Input.Items[i].Route" class="form-label"></label>
+                            <input asp-for="Input.Items[i].Route" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Input.Items[i].AdditionalInstructions" class="form-label"></label>
+                            <input asp-for="Input.Items[i].AdditionalInstructions" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                <button type="submit" name="addItem" value="true" class="btn btn-outline-navy">
+                    <i class="bi bi-plus-lg"></i> Add medicine
+                </button>
+                <button type="submit" name="addItem" value="false" class="btn btn-teal text-white">
+                    <i class="bi bi-check2"></i> Issue prescription
+                </button>
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Prescriptions" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

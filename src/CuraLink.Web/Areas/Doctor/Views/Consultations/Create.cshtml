@@ -1,0 +1,66 @@
+@model ConsultationFormViewModel
+@{
+    ViewData["Title"] = "New consultation";
+}
+
+<h1 class="h3 mb-4">New consultation</h1>
+
+<div class="card card-shadow">
+    <div class="card-body">
+        <form asp-area="Doctor" asp-controller="Consultations" asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Input.AppointmentId" class="form-label">Appointment</label>
+                    <select asp-for="Input.AppointmentId" class="form-select" asp-items="@(new SelectList(Model.Appointments, "Id", "PatientName"))">
+                        <option value="">Select appointment</option>
+                    </select>
+                    <span asp-validation-for="Input.AppointmentId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.FollowUpDate" class="form-label"></label>
+                    <input asp-for="Input.FollowUpDate" class="form-control" type="date" />
+                    <span asp-validation-for="Input.FollowUpDate" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Input.Reason" class="form-label"></label>
+                    <input asp-for="Input.Reason" class="form-control" />
+                    <span asp-validation-for="Input.Reason" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.ReportedSymptoms" class="form-label"></label>
+                    <textarea asp-for="Input.ReportedSymptoms" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Input.ReportedSymptoms" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.ClinicalObservations" class="form-label"></label>
+                    <textarea asp-for="Input.ClinicalObservations" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Input.ClinicalObservations" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.Diagnosis" class="form-label"></label>
+                    <textarea asp-for="Input.Diagnosis" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Input.Diagnosis" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.TreatmentPlan" class="form-label"></label>
+                    <textarea asp-for="Input.TreatmentPlan" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Input.TreatmentPlan" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Input.Recommendations" class="form-label"></label>
+                    <textarea asp-for="Input.Recommendations" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Input.Recommendations" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-teal text-white"><i class="bi bi-check2"></i> Save consultation</button>
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Consultations" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

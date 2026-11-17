@@ -1,0 +1,95 @@
+@model AppointmentIndexViewModel
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+<h1 class="h3 mb-4">Appointments</h1>
+
+<div class="card card-shadow mb-4">
+    <div class="card-body">
+        <form asp-area="Doctor" asp-controller="Appointments" asp-action="Index" method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label asp-for="Filter.Status" class="form-label"></label>
+                <select asp-for="Filter.Status" class="form-select" asp-items="@(Html.GetEnumSelectList<AppointmentStatus>())">
+                    <option value="">All statuses</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Filter.FromUtc" class="form-label">From (UTC)</label>
+                <input asp-for="Filter.FromUtc" class="form-control" type="datetime-local" />
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Filter.ToUtc" class="form-label">To (UTC)</label>
+                <input asp-for="Filter.ToUtc" class="form-control" type="datetime-local" />
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-navy"><i class="bi bi-funnel"></i> Filter</button>
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Appointments" asp-action="Index">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-shadow">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0">Results</h2>
+        <span class="text-muted small">@Model.Result.TotalCount appointment(s)</span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Result.Items is null || !Model.Result.Items.Any())
+        {
+            <div class="empty-state m-3">
+                <i class="bi bi-calendar2-x"></i>
+                No appointments match your filters.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appointment in Model.Result.Items)
+                        {
+                            <tr>
+                                <td>@TimeZoneHelper.Format(appointment.StartAtUtc, AppTimeZone)</td>
+                                <td>@appointment.PatientName</td>
+                                <td>@(string.IsNullOrWhiteSpace(appointment.PatientReason) ? "-" : appointment.PatientReason)</td>
+                                <td><span class="status-badge status-@appointment.Status">@appointment.Status</span></td>
+                                <td>
+                                    <a asp-area="Doctor" asp-controller="Appointments" asp-action="Details" asp-route-id="@appointment.Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    @if (Model.Result.TotalPages > 1)
+    {
+        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+            <a class="btn btn-sm btn-outline-navy @(Model.Result.Page <= 1 ? "disabled" : "")"
+               asp-area="Doctor" asp-controller="Appointments" asp-action="Index"
+               asp-route-Page="@(Model.Result.Page - 1)"
+               asp-route-Status="@Model.Filter.Status"
+               asp-route-FromUtc="@Model.Filter.FromUtc"
+               asp-route-ToUtc="@Model.Filter.ToUtc">Previous</a>
+            <span class="text-muted small">Page @Model.Result.Page of @Model.Result.TotalPages</span>
+            <a class="btn btn-sm btn-outline-navy @(Model.Result.Page >= Model.Result.TotalPages ? "disabled" : "")"
+               asp-area="Doctor" asp-controller="Appointments" asp-action="Index"
+               asp-route-Page="@(Model.Result.Page + 1)"
+               asp-route-Status="@Model.Filter.Status"
+               asp-route-FromUtc="@Model.Filter.FromUtc"
+               asp-route-ToUtc="@Model.Filter.ToUtc">Next</a>
+        </div>
+    }
+</div>

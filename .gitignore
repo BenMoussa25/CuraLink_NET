@@ -1,0 +1,17 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+TestResults/
+coverage*
+*.trx
+.env
+App_Data/
+logs/
+*.log
+*.db
+*.mdf
+*.ldf

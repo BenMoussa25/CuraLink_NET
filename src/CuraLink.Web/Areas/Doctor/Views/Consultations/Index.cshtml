@@ -1,0 +1,59 @@
+@model IReadOnlyList<ConsultationDto>
+@{
+    ViewData["Title"] = "Consultations";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Consultations</h1>
+    <a class="btn btn-navy" asp-area="Doctor" asp-controller="Consultations" asp-action="Create">
+        <i class="bi bi-plus-lg"></i> New consultation
+    </a>
+</div>
+
+<div class="card card-shadow">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0">All consultations</h2>
+        <span class="text-muted small">@Model.Count total</span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model is null || !Model.Any())
+        {
+            <div class="empty-state m-3">
+                <i class="bi bi-journal-x"></i>
+                No consultations have been recorded yet.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Reason</th>
+                            <th>Diagnosis</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var consultation in Model)
+                        {
+                            <tr>
+                                <td>@TimeZoneHelper.Format(consultation.ConsultationDate, AppTimeZone)</td>
+                                <td>@consultation.PatientName</td>
+                                <td>@consultation.Reason</td>
+                                <td>@(string.IsNullOrWhiteSpace(consultation.Diagnosis) ? "-" : consultation.Diagnosis)</td>
+                                <td><span class="status-badge status-@consultation.Status">@consultation.Status</span></td>
+                                <td>
+                                    <a asp-area="Doctor" asp-controller="Consultations" asp-action="Details" asp-route-id="@consultation.Id">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,71 @@
+@model DoctorProfileEditViewModel
+@{
+    ViewData["Title"] = "Edit profile";
+}
+
+<h1 class="h3 mb-4">Edit profile</h1>
+
+<div class="card card-shadow">
+    <div class="card-body">
+        <form asp-area="Doctor" asp-controller="Profile" asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Input.SpecialtyId" class="form-label">Specialty</label>
+                    <select asp-for="Input.SpecialtyId" class="form-select" asp-items="@(new SelectList(Model.Specialties, "Id", "Name"))">
+                        <option value="">Select specialty</option>
+                    </select>
+                    <span asp-validation-for="Input.SpecialtyId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.ClinicName" class="form-label"></label>
+                    <input asp-for="Input.ClinicName" class="form-control" />
+                    <span asp-validation-for="Input.ClinicName" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Input.Biography" class="form-label"></label>
+                    <textarea asp-for="Input.Biography" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Input.Biography" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.ClinicAddress" class="form-label"></label>
+                    <input asp-for="Input.ClinicAddress" class="form-control" />
+                    <span asp-validation-for="Input.ClinicAddress" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Input.City" class="form-label"></label>
+                    <input asp-for="Input.City" class="form-control" />
+                    <span asp-validation-for="Input.City" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Input.PublicPhone" class="form-label"></label>
+                    <input asp-for="Input.PublicPhone" class="form-control" />
+                    <span asp-validation-for="Input.PublicPhone" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Input.ConsultationFee" class="form-label"></label>
+                    <input asp-for="Input.ConsultationFee" class="form-control" />
+                    <span asp-validation-for="Input.ConsultationFee" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Input.CurrencyCode" class="form-label"></label>
+                    <input asp-for="Input.CurrencyCode" class="form-control" />
+                    <span asp-validation-for="Input.CurrencyCode" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Input.ProfileImagePath" class="form-label"></label>
+                    <input asp-for="Input.ProfileImagePath" class="form-control" />
+                    <span asp-validation-for="Input.ProfileImagePath" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-teal text-white"><i class="bi bi-check2"></i> Save</button>
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Profile" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

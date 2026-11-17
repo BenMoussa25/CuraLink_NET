@@ -1,0 +1,90 @@
+@model AppointmentDetailsViewModel
+@{
+    ViewData["Title"] = "Appointment details";
+    var appointment = Model.Appointment;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Appointment details</h1>
+    <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Appointments" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Back to list
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card card-shadow">
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Patient</dt>
+                    <dd class="col-sm-8">@appointment.PatientName</dd>
+                    <dt class="col-sm-4">Start</dt>
+                    <dd class="col-sm-8">@TimeZoneHelper.Format(appointment.StartAtUtc, AppTimeZone)</dd>
+                    <dt class="col-sm-4">End</dt>
+                    <dd class="col-sm-8">@TimeZoneHelper.Format(appointment.EndAtUtc, AppTimeZone)</dd>
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8"><span class="status-badge status-@appointment.Status">@appointment.Status</span></dd>
+                    <dt class="col-sm-4">Reason</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(appointment.PatientReason) ? "-" : appointment.PatientReason)</dd>
+                    <dt class="col-sm-4">Cancellation reason</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(appointment.CancellationReason) ? "-" : appointment.CancellationReason)</dd>
+                    <dt class="col-sm-4">Created</dt>
+                    <dd class="col-sm-8">@TimeZoneHelper.Format(appointment.CreatedAtUtc, AppTimeZone)</dd>
+                    <dt class="col-sm-4">Updated</dt>
+                    <dd class="col-sm-8">@TimeZoneHelper.Format(appointment.UpdatedAtUtc, AppTimeZone)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card card-shadow mb-4">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Change status</h2></div>
+            <div class="card-body">
+                <form asp-area="Doctor" asp-controller="Appointments" asp-action="ChangeStatus" asp-route-id="@appointment.Id" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="NewStatus" class="form-label"></label>
+                        <select asp-for="NewStatus" class="form-select" asp-items="@(Html.GetEnumSelectList<AppointmentStatus>())"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Reason" class="form-label"></label>
+                        <input asp-for="Reason" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-navy"><i class="bi bi-check2"></i> Update status</button>
+                </form>
+            </div>
+        </div>
+        <div class="card card-shadow">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Reschedule (UTC)</h2></div>
+            <div class="card-body">
+                <form asp-area="Doctor" asp-controller="Appointments" asp-action="Reschedule" asp-route-id="@appointment.Id" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="StartUtc" class="form-label"></label>
+                        <input asp-for="StartUtc" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="StartUtc" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="EndUtc" class="form-label"></label>
+                        <input asp-for="EndUtc" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="EndUtc" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-teal text-white"><i class="bi bi-clock"></i> Reschedule</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (appointment.Status == AppointmentStatus.Confirmed)
+{
+    <div class="mt-4">
+        <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Consultations" asp-action="Create" asp-route-appointmentId="@appointment.Id">
+            <i class="bi bi-journal-plus"></i> Start consultation
+        </a>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,48 @@
+@model ScheduleInput
+@{
+    ViewData["Title"] = "Edit schedule";
+}
+
+<h1 class="h3 mb-4">Edit schedule</h1>
+
+<div class="card card-shadow">
+    <div class="card-body">
+        <form asp-area="Doctor" asp-controller="Schedule" asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label asp-for="DayOfWeek" class="form-label"></label>
+                    <select asp-for="DayOfWeek" class="form-select" asp-items="@(Html.GetEnumSelectList<DayOfWeek>())"></select>
+                    <span asp-validation-for="DayOfWeek" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="StartTime" class="form-label"></label>
+                    <input asp-for="StartTime" class="form-control" type="time" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="EndTime" class="form-label"></label>
+                    <input asp-for="EndTime" class="form-control" type="time" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="SlotDurationMinutes" class="form-label"></label>
+                    <input asp-for="SlotDurationMinutes" class="form-control" />
+                    <span asp-validation-for="SlotDurationMinutes" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 form-check mt-4">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label"></label>
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-teal text-white"><i class="bi bi-check2"></i> Save</button>
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Schedule" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

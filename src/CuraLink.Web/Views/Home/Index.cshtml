@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="px-4 py-5 hero rounded-3 mb-5">
+    <div class="container py-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <span class="badge bg-teal mb-3">Connected care</span>
+                <h1 class="display-5 fw-bold">Care that stays connected.</h1>
+                <p class="lead mt-3">
+                    CuraLink brings doctors and patients together in one secure place for appointments,
+                    consultations, prescriptions and medical documents.
+                </p>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <a class="btn btn-teal btn-lg text-white" asp-area="" asp-controller="Account" asp-action="Register">
+                        Create an account
+                    </a>
+                    <a class="btn btn-outline-light btn-lg" asp-area="" asp-controller="Home" asp-action="About">
+                        Learn more
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <i class="bi bi-heart-pulse hero-icon"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-calendar2-check fs-2 text-teal"></i>
+                    <h2 class="h5 mt-3">Appointments</h2>
+                    <p class="text-muted mb-0">Request visits, manage schedules and keep track of every appointment.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-journal-text fs-2 text-teal"></i>
+                    <h2 class="h5 mt-3">Consultations</h2>
+                    <p class="text-muted mb-0">Keep clinical notes, diagnoses and follow-up plans organized.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-shield-lock fs-2 text-teal"></i>
+                    <h2 class="h5 mt-3">Private records</h2>
+                    <p class="text-muted mb-0">Prescriptions and documents stay with the right care team.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

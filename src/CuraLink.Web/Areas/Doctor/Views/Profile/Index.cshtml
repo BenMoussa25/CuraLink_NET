@@ -1,0 +1,53 @@
+@model DoctorProfileDto
+@{
+    ViewData["Title"] = "My profile";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">My profile</h1>
+    <a class="btn btn-navy" asp-area="Doctor" asp-controller="Profile" asp-action="Edit">
+        <i class="bi bi-pencil"></i> Edit profile
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card card-shadow text-center p-4">
+            <i class="bi bi-person-badge fs-1 text-navy"></i>
+            <h2 class="h5 mt-3 mb-1">@Model.FirstName @Model.LastName</h2>
+            <p class="text-muted mb-2">@Model.SpecialtyName</p>
+            <span class="status-badge status-@Model.VerificationStatus">@Model.VerificationStatus</span>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card card-shadow">
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">@Model.Email</dd>
+                    <dt class="col-sm-4">Biography</dt>
+                    <dd class="col-sm-8">@Model.Biography</dd>
+                    <dt class="col-sm-4">Clinic</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.ClinicName) ? "-" : Model.ClinicName)</dd>
+                    <dt class="col-sm-4">Address</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.ClinicAddress) ? "-" : Model.ClinicAddress)</dd>
+                    <dt class="col-sm-4">City</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.City) ? "-" : Model.City)</dd>
+                    <dt class="col-sm-4">Phone</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.PublicPhone) ? "-" : Model.PublicPhone)</dd>
+                    <dt class="col-sm-4">Consultation fee</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.ConsultationFee.HasValue)
+                        {
+                            @Model.ConsultationFee.Value.ToString("N2") @Model.CurrencyCode
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

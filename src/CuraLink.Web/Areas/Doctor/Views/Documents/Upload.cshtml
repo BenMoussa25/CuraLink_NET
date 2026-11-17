@@ -1,0 +1,48 @@
+@model DocumentUploadViewModel
+@{
+    ViewData["Title"] = "Upload document";
+}
+
+<h1 class="h3 mb-4">Upload document</h1>
+
+<div class="card card-shadow">
+    <div class="card-body">
+        <form asp-area="Doctor" asp-controller="Documents" asp-action="Upload" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="PatientId" class="form-label">Patient</label>
+                    <select asp-for="PatientId" class="form-select" asp-items="@(new SelectList(Model.Patients, "Id", "FullName"))">
+                        <option value="">Select patient</option>
+                    </select>
+                    <span asp-validation-for="PatientId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="DocumentType" class="form-label"></label>
+                    <select asp-for="DocumentType" class="form-select" asp-items="@(Html.GetEnumSelectList<DocumentType>())"></select>
+                    <span asp-validation-for="DocumentType" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="File" class="form-label"></label>
+                    <input asp-for="File" class="form-control" type="file" />
+                    <span asp-validation-for="File" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-teal text-white"><i class="bi bi-upload"></i> Upload</button>
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Documents" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Patients is null || !Model.Patients.Any())
+{
+    <div class="alert alert-info mt-3">
+        No patients are available for upload yet.
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

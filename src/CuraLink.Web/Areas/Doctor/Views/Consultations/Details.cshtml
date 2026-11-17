@@ -1,0 +1,71 @@
+@model ConsultationDto
+@{
+    ViewData["Title"] = "Consultation details";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Consultation details</h1>
+        <p class="text-muted mb-0">@Model.PatientName &middot; @TimeZoneHelper.Format(Model.ConsultationDate, AppTimeZone)</p>
+    </div>
+    <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Consultations" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Back to list
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card card-shadow">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h2 class="h6 mb-0">Clinical record</h2>
+                <span class="status-badge status-@Model.Status">@Model.Status</span>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Reason</dt>
+                    <dd class="col-sm-8">@Model.Reason</dd>
+                    <dt class="col-sm-4">Reported symptoms</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.ReportedSymptoms) ? "-" : Model.ReportedSymptoms)</dd>
+                    <dt class="col-sm-4">Clinical observations</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.ClinicalObservations) ? "-" : Model.ClinicalObservations)</dd>
+                    <dt class="col-sm-4">Diagnosis</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Diagnosis) ? "-" : Model.Diagnosis)</dd>
+                    <dt class="col-sm-4">Treatment plan</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.TreatmentPlan) ? "-" : Model.TreatmentPlan)</dd>
+                    <dt class="col-sm-4">Recommendations</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Recommendations) ? "-" : Model.Recommendations)</dd>
+                    <dt class="col-sm-4">Follow-up</dt>
+                    <dd class="col-sm-8">@TimeZoneHelper.Format(Model.FollowUpDate, AppTimeZone)</dd>
+                    <dt class="col-sm-4">Finalized</dt>
+                    <dd class="col-sm-8">@TimeZoneHelper.Format(Model.FinalizedAtUtc, AppTimeZone)</dd>
+                    <dt class="col-sm-4">Shared with patient</dt>
+                    <dd class="col-sm-8">@(Model.IsSharedWithPatient ? "Yes" : "No")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card card-shadow mb-4">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Actions</h2></div>
+            <div class="card-body d-grid gap-2">
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Consultations" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="bi bi-pencil"></i> Edit consultation
+                </a>
+                <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Prescriptions" asp-action="Create" asp-route-consultationId="@Model.Id">
+                    <i class="bi bi-capsule"></i> Issue prescription
+                </a>
+                @if (Model.Status == ConsultationStatus.Draft)
+                {
+                    <form asp-area="Doctor" asp-controller="Consultations" asp-action="Finalize" asp-route-id="@Model.Id" method="post">
+                        <button type="submit" class="btn btn-teal text-white w-100"><i class="bi bi-check2-circle"></i> Finalize</button>
+                    </form>
+                }
+                <form asp-area="Doctor" asp-controller="Consultations" asp-action="Share" asp-route-id="@Model.Id" method="post">
+                    <button type="submit" class="btn btn-outline-navy" onclick="return confirm('Share this consultation with the patient?');">
+                        <i class="bi bi-share"></i> Share with patient
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

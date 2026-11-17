@@ -1,0 +1,108 @@
+@model ScheduleExceptionsViewModel
+@{
+    ViewData["Title"] = "Schedule exceptions";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Schedule exceptions</h1>
+    <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Schedule" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Back to schedule
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card card-shadow">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Configured exceptions</h2></div>
+            <div class="card-body p-0">
+                @if (Model.Exceptions is null || !Model.Exceptions.Any())
+                {
+                    <div class="empty-state m-3">
+                        <i class="bi bi-calendar-x"></i>
+                        No schedule exceptions yet.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Reason</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var exception in Model.Exceptions)
+                                {
+                                    <tr>
+                                        <td>@exception.Date.ToString("dd MMM yyyy")</td>
+                                        <td>
+                                            @if (exception.StartTime.HasValue && exception.EndTime.HasValue)
+                                            {
+                                                @exception.StartTime.Value.ToString(@"hh\:mm") <span>-</span> @exception.EndTime.Value.ToString(@"hh\:mm")
+                                            }
+                                            else
+                                            {
+                                                <span>Full day</span>
+                                            }
+                                        </td>
+                                        <td>@(string.IsNullOrWhiteSpace(exception.Reason) ? "-" : exception.Reason)</td>
+                                        <td>
+                                            <form asp-area="Doctor" asp-controller="Schedule" asp-action="DeleteException" asp-route-id="@exception.Id" method="post" class="m-0">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this exception?');">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card card-shadow">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Add exception</h2></div>
+            <div class="card-body">
+                <form asp-area="Doctor" asp-controller="Schedule" asp-action="AddException" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <div class="mb-3">
+                        <label asp-for="Input.Date" class="form-label"></label>
+                        <input asp-for="Input.Date" class="form-control" type="date" />
+                        <span asp-validation-for="Input.Date" class="text-danger"></span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label asp-for="Input.StartTime" class="form-label"></label>
+                            <input asp-for="Input.StartTime" class="form-control" type="time" />
+                            <span asp-validation-for="Input.StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Input.EndTime" class="form-label"></label>
+                            <input asp-for="Input.EndTime" class="form-control" type="time" />
+                            <span asp-validation-for="Input.EndTime" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-check my-3">
+                        <input asp-for="Input.IsUnavailable" class="form-check-input" />
+                        <label asp-for="Input.IsUnavailable" class="form-check-label"></label>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.Reason" class="form-label"></label>
+                        <input asp-for="Input.Reason" class="form-control" />
+                        <span asp-validation-for="Input.Reason" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-teal text-white"><i class="bi bi-plus-lg"></i> Add exception</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

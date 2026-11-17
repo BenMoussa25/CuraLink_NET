@@ -1,0 +1,173 @@
+@model PatientDetailDto
+@{
+    ViewData["Title"] = "Patient details";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">@Model.FullName</h1>
+        <p class="text-muted mb-0">@Model.Email</p>
+    </div>
+    <a class="btn btn-outline-navy" asp-area="Doctor" asp-controller="Patients" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Back to list
+    </a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-4">
+        <div class="card card-shadow h-100">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Contact details</h2></div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5">Phone</dt>
+                    <dd class="col-7">@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "-" : Model.PhoneNumber)</dd>
+                    <dt class="col-5">Date of birth</dt>
+                    <dd class="col-7">@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("dd MMM yyyy") : "-")</dd>
+                    <dt class="col-5">Address</dt>
+                    <dd class="col-7">@(string.IsNullOrWhiteSpace(Model.Address) ? "-" : Model.Address)</dd>
+                    <dt class="col-5">Emergency contact</dt>
+                    <dd class="col-7">@(string.IsNullOrWhiteSpace(Model.EmergencyContactName) ? "-" : Model.EmergencyContactName)</dd>
+                    <dt class="col-5">Emergency phone</dt>
+                    <dd class="col-7">@(string.IsNullOrWhiteSpace(Model.EmergencyContactPhone) ? "-" : Model.EmergencyContactPhone)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card card-shadow h-100">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Allergies</h2></div>
+            <div class="card-body p-0">
+                @if (Model.Allergies is null || !Model.Allergies.Any())
+                {
+                    <div class="empty-state m-3"><i class="bi bi-shield-exclamation"></i>No allergies recorded.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var allergy in Model.Allergies)
+                        {
+                            <li class="list-group-item">
+                                <strong>@allergy.Name</strong>
+                                @if (!string.IsNullOrWhiteSpace(allergy.Reaction))
+                                {
+                                    <span class="text-muted">- @allergy.Reaction</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card card-shadow h-100">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Conditions</h2></div>
+            <div class="card-body p-0">
+                @if (Model.Conditions is null || !Model.Conditions.Any())
+                {
+                    <div class="empty-state m-3"><i class="bi bi-heart"></i>No medical conditions recorded.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var condition in Model.Conditions)
+                        {
+                            <li class="list-group-item">
+                                <strong>@condition.Name</strong>
+                                <span class="text-muted d-block small">@TimeZoneHelper.Format(condition.RecordedAtUtc, AppTimeZone)</span>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-shadow mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0">Consultations</h2>
+        <a asp-area="Doctor" asp-controller="Consultations" asp-action="Index">All consultations</a>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Consultations is null || !Model.Consultations.Any())
+        {
+            <div class="empty-state m-3"><i class="bi bi-journal-x"></i>No consultations recorded.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Reason</th>
+                            <th>Diagnosis</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var consultation in Model.Consultations)
+                        {
+                            <tr>
+                                <td>@TimeZoneHelper.Format(consultation.ConsultationDate, AppTimeZone)</td>
+                                <td>@consultation.Reason</td>
+                                <td>@(string.IsNullOrWhiteSpace(consultation.Diagnosis) ? "-" : consultation.Diagnosis)</td>
+                                <td><span class="status-badge status-@consultation.Status">@consultation.Status</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card card-shadow h-100">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Prescriptions</h2></div>
+            <div class="card-body p-0">
+                @if (Model.Prescriptions is null || !Model.Prescriptions.Any())
+                {
+                    <div class="empty-state m-3"><i class="bi bi-capsule"></i>No prescriptions issued.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var prescription in Model.Prescriptions)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@TimeZoneHelper.Format(prescription.IssuedAtUtc, AppTimeZone)</span>
+                                <span class="status-badge status-@prescription.Status">@prescription.Status</span>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card card-shadow h-100">
+            <div class="card-header bg-white"><h2 class="h6 mb-0">Documents</h2></div>
+            <div class="card-body p-0">
+                @if (Model.Documents is null || !Model.Documents.Any())
+                {
+                    <div class="empty-state m-3"><i class="bi bi-folder2"></i>No documents uploaded.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var document in Model.Documents)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@document.OriginalFileName</span>
+                                <a asp-area="Doctor" asp-controller="Documents" asp-action="Download" asp-route-id="@document.Id">Download</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
